@@ -2,6 +2,7 @@
   "name": "password-js",
   "private": false,
   "version": "0.0.1",
+  "packageManager": "pnpm@9.11.0",
   "description": "a simple password generator",
   "author": "wolfgang jungmayer",
   "license": "MIT",
@@ -16,6 +17,12 @@
       "require": "./dist/password-js.umd.js"
     }
   },
+  "files": [
+    "LICENSE",
+    "README.md",
+    "dist",
+    "package.json"
+  ],
   "scripts": {
     "dev": "vite",
     "test": "vitest",
