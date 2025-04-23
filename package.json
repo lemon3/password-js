@@ -1,0 +1,32 @@
+{
+  "name": "password-js",
+  "private": false,
+  "version": "0.0.1",
+  "description": "a simple password generator",
+  "author": "wolfgang jungmayer",
+  "license": "MIT",
+  "browser": "dist/password-js.umd.js",
+  "type": "module",
+  "main": "dist/password-js.umd.js",
+  "module": "./dist/password-js.js",
+  "style": "./dist/password-js.css",
+  "exports": {
+    ".": {
+      "import": "./dist/password-js.js",
+      "require": "./dist/password-js.umd.js"
+    }
+  },
+  "scripts": {
+    "dev": "vite",
+    "test": "vitest",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "homepage": "https://lemon3.github.io",
+  "devDependencies": {
+    "typescript": "~5.7.2",
+    "vite": "^6.3.1",
+    "vite-plugin-banner": "^0.8.1",
+    "vitest": "^3.1.2"
+  }
+}
