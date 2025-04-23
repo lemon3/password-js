@@ -29,22 +29,26 @@ jobs:
       - name: 📦 Install Dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: ✅ Run Tests
+        run: pnpm run test
+
       - name: 🏗 Build
         run: pnpm run build
 
-      # ✅ Core Package
-      - name: ✅ Run Tests for Core
-        run: pnpm run test
-
-      - name: 🚀 Publish Core Package
-        continue-on-error: true # ✅ Prevents workflow failure if publish fails
+      - name: 🚀 Publish Package
         run: |
           PKG_NAME=$(node -p "require('./package.json').name")
           PKG_VERSION=$(node -p "require('./package.json').version")
           NPM_VERSION=$(npm show $PKG_NAME version || echo "0.0.0")
 
           if [ "$PKG_VERSION" != "$NPM_VERSION" ]; then
-            pnpm publish --access public --no-git-checks || echo "⚠️ No new version, skipping publish."
+            pnpm publish --access public --no-git-checks || {
+              echo "❌ Publish failed. Dumping logs:";
+              npm whoami
+              pnpm -v
+              cat ~/.npmrc || echo "No .npmrc found"
+              exit 1
+            }
           else
             echo "⚠️ Version $PKG_VERSION already exists. Skipping publish."
           fi
