@@ -1,7 +1,7 @@
 {
   "name": "pwkit",
   "private": false,
-  "version": "0.0.1",
+  "version": "0.0.2",
   "packageManager": "pnpm@9.11.0",
   "description": "Modern, customizable password generator with entropy analysis and flexible character group settings.",
   "keywords": [
@@ -23,15 +23,14 @@
   ],
   "author": "wolfgang jungmayer",
   "license": "MIT",
-  "browser": "dist/password-js.umd.js",
+  "browser": "dist/pwkit.umd.js",
   "type": "module",
-  "main": "dist/password-js.umd.js",
-  "module": "./dist/password-js.js",
-  "style": "./dist/password-js.css",
+  "main": "dist/pwkit.umd.js",
+  "module": "./dist/pwkit.js",
   "exports": {
     ".": {
-      "import": "./dist/password-js.js",
-      "require": "./dist/password-js.umd.js"
+      "import": "./dist/pwkit.js",
+      "require": "./dist/pwkit.umd.js"
     }
   },
   "files": [
@@ -46,7 +45,7 @@
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
-  "homepage": "https://lemon3.github.io",
+  "homepage": "https://github.com/lemon3/pwkit",
   "devDependencies": {
     "typescript": "~5.7.2",
     "vite": "^6.3.1",

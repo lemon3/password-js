@@ -79,6 +79,45 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+.button-group {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-bottom: 2em;
+}
+
+.button-group button {
+  margin: 0 0.5em;
+}
+
+.password-wrapper {
+  position: relative;
+  display: flex;
+  margin: 0 auto;
+  flex-direction: column;
+  max-width: 300px;
+}
+.strength-bar-wrapper {
+  height: 8px;
+  width: 100%;
+  position: relative;
+}
+
+#strength-result {
+  min-height: 24px;
+}
+
+.strength-bar {
+  background-color: red;
+  width: 0;
+  height: 100%;
+}
+
+#test-password {
+  font-size: 24px;
+  padding: 0.5em;
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
@@ -90,4 +129,11 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+
+canvas {
+  width: 100%;
+  height: auto;
+  display: block;
+  image-rendering: pixelated;
 }
