@@ -1,7 +1,7 @@
 {
   "name": "pwkit",
   "private": false,
-  "version": "0.0.4",
+  "version": "0.0.5",
   "packageManager": "pnpm@9.11.0",
   "description": "Modern, customizable password generator with entropy analysis and flexible character group settings.",
   "keywords": [
@@ -23,15 +23,16 @@
   ],
   "author": "wolfgang jungmayer",
   "license": "MIT",
-  "types": "dist/types/index.d.ts",
-  "browser": "dist/pwkit.umd.js",
+  "browser": "./dist/pwkit.umd.js",
   "type": "module",
-  "main": "dist/pwkit.umd.js",
+  "main": "./dist/pwkit.umd.js",
   "module": "./dist/pwkit.js",
+  "types": "./dist/types/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/pwkit.js",
-      "require": "./dist/pwkit.umd.js"
+      "require": "./dist/pwkit.umd.js",
+      "types": "./dist/types/index.d.ts"
     }
   },
   "files": [

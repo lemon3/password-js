@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.0.5
+### updated
+- patch lib/index.ts and add export type (to access types easily)
+
 ## v0.0.4
 ### updated
 - add type definitions to package json

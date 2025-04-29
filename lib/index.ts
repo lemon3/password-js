@@ -265,4 +265,11 @@ class PasswordClass {
 
 const password = () => new PasswordClass();
 
+export type {
+  CharGroups,
+  Options,
+  Output,
+  PasswordStrength,
+  PasswordStrengthStatistic,
+};
 export { password, charGroups };
