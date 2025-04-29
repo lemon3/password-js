@@ -1,9 +1,9 @@
 # Random Password Generator
 Modern, customizable password generator with entropy analysis and flexible character group settings.
 
-## Import to your project
+## Import into your project
 ```bash
-pnpm add pwkit;
+pnpm add pwkit
 ```
 
 ## Usage
@@ -25,8 +25,13 @@ import { password } from "pwkit";
 
 const pwd = password();
 const options = {
-  // see all available options below
+  length: 12,
+  lowercase: 4,
+  symbols: 3,
 };
+// generates a random password with a length of 12
+// and ensures that at least 4 lower-case letters and
+// at least 3 symbols are used for the generation.
 console.log(pwd.create(options));
 ```
 
@@ -49,10 +54,19 @@ const pwd = password();
 const myPassword = pwd.create();
 
 console.log(myPassword);
-// returns, e.g.:
+// returns, eg.:
 // {
-//   password: 'BISMQh^g4F',
 //   entropy: 65.23561956057013
+//   length: 10
+//   password: "7)9uUIU]vg"
+//   statistic: {
+//     lowercase: 3,
+//     uppercase: 3,
+//     numbers: 2,
+//     symbols: 2,
+//     umlauts: 0
+//   }
+//   strength: 0.6523561956057012,
 // }
 ```
 
@@ -65,16 +79,16 @@ const test = pwd.test(myPassword);
 console.log(tmp);
 // returns:
 // {
-//   entropy: 65.23561956057013
-//   length: 10
+//   entropy: 65.23561956057013,
+//   length: 10,
 //   statistic: {
-//     lowercase: 2
-//     numbers: 3
-//     symbols: 2
-//     umlauts: 0
-//     uppercase: 3
+//     lowercase: 2,
+//     uppercase: 3,
+//     numbers: 3,
+//     symbols: 2,
+//     umlauts: 0,
 //   },
-//   strength: 0.6523561956057012
+//   strength: 0.6523561956057012,
 // }
 ```
 

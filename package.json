@@ -1,7 +1,7 @@
 {
   "name": "pwkit",
   "private": false,
-  "version": "0.0.2",
+  "version": "0.0.3",
   "packageManager": "pnpm@9.11.0",
   "description": "Modern, customizable password generator with entropy analysis and flexible character group settings.",
   "keywords": [
@@ -43,6 +43,7 @@
     "dev": "vite",
     "test": "vitest",
     "build": "tsc && vite build",
+    "demo": "vite build --config vite.config.demo.js",
     "preview": "vite preview"
   },
   "homepage": "https://github.com/lemon3/pwkit",

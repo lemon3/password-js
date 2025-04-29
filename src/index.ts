@@ -1,5 +1,6 @@
 import './style.css';
-import { password, type PasswordStrength } from '../lib/index.ts';
+import { Options, type PasswordStrength } from '../lib/types';
+import { password } from '../lib/index';
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   <div>
@@ -15,10 +16,7 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
       </div>
     </div>
     <div id="strength-result"></div>
-
   </div>
-
-
 `;
 
 const init = () => {
@@ -30,13 +28,33 @@ const init = () => {
   const strengthBar = document.querySelector('#strength-bar') as HTMLElement;
 
   const pwd = password();
+  let prevColorClass: string;
 
   const update = (pw: PasswordStrength) => {
     if (strengthResult) {
       const percent = 100 * pw.strength;
-      strengthResult.textContent =
-        0 === pw.entropy ? '' : '' + percent.toFixed(0);
+      const fixedP = +percent.toFixed(0);
+      strengthResult.textContent = 0 === pw.entropy ? '' : `${fixedP}%`;
       strengthBar.style.width = '' + percent + '%';
+
+      console.log(pw.statistic);
+      let colorClass: string = 'p0';
+
+      if (fixedP < 20) {
+        colorClass = 'p0';
+      } else if (fixedP < 40) {
+        colorClass = 'p20';
+      } else if (fixedP < 60) {
+        colorClass = 'p40';
+      } else if (fixedP < 80) {
+        colorClass = 'p60';
+      } else if (fixedP <= 100) {
+        colorClass = 'p80';
+      }
+
+      strengthBar.classList.remove(prevColorClass);
+      strengthBar.classList.add(colorClass);
+      prevColorClass = colorClass;
     }
   };
 
@@ -48,7 +66,16 @@ const init = () => {
 
   const createNew = (evt?: Event) => {
     if (evt) evt.preventDefault();
-    const pw = pwd.create({ length: 10, normalDistribute: !true });
+    const options: Options = {
+      length: 12,
+      normalDistribute: !true,
+      // lowercaseWeight: 13,
+      // uppercaseWeight: 13,
+      // numbersWeight: 0,
+      // symbolsWeight: 13,
+      // umlautsWeight: 0,
+    };
+    const pw = pwd.create(options);
     testPassword.value = `${pw.password}`;
     update(pw);
   };
@@ -58,10 +85,6 @@ const init = () => {
     generate.addEventListener('click', createNew);
     testPassword.addEventListener('input', test);
   }
-
-  // const myPassword = '.Pa55-W0rD';
-  // const testing = pwd.test(myPassword);
-  // console.log(testing);
 };
 
 if (

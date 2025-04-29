@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import { type Options } from './defaults';
+import { type Options } from './types';
 import { password } from './index';
 
-describe('Password generator', () => {
+describe('PasswordClass.create', () => {
   it('should generate a password of specified length', () => {
     const pwd = password();
     const result = pwd.create({
@@ -142,5 +142,29 @@ describe('PasswordClass.test', () => {
     expect(result.statistic.umlauts).toBe(0);
     expect(result.entropy).toBeGreaterThan(0);
     expect(result.strength).toBeGreaterThan(0);
+  });
+});
+
+describe('PasswordClass.getCharset', () => {
+  it('should return the correct charset after create()', () => {
+    const pw = password();
+    pw.create({
+      length: 12,
+      lowercase: 4,
+      uppercase: 4,
+      numbers: 2,
+      symbols: 2,
+      umlauts: 0,
+    });
+    const charset = pw.getCharset();
+    expect(typeof charset).toBe('string');
+    expect(charset.length).toBeGreaterThan(0);
+    expect(charset).toContain('a'); // assumes default lowercase chars
+  });
+
+  it('should return an empty string before create()', () => {
+    const pw = password();
+    const charset = pw.getCharset();
+    expect(charset).toBe('');
   });
 });

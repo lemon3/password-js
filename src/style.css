@@ -11,6 +11,27 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  /* --color-1: rgb(206, 50, 50);
+  --color-2: rgb(161, 79, 46);
+  --color-3: rgb(117, 108, 43);
+  --color-4: rgb(72, 137, 35);
+  --color-5: rgb(27, 165, 27); */
+
+  /* 1. Red */
+  --red: rgb(206, 50, 50);
+
+  /* 2. Reddish-Orange */
+  --red-orange: rgb(255, 85, 0);
+
+  /* 3. Orange */
+  --orange: rgb(236, 187, 10);
+
+  /* 4. Yellow-Green */
+  --yellow-green: rgb(161, 235, 15);
+
+  /* 5. Green */
+  --green: rgb(7, 210, 7);
 }
 
 html {
@@ -97,20 +118,38 @@ button:focus-visible {
   flex-direction: column;
   max-width: 300px;
 }
+
+#strength-result {
+  min-height: 24px;
+}
+
 .strength-bar-wrapper {
   height: 8px;
   width: 100%;
   position: relative;
 }
 
-#strength-result {
-  min-height: 24px;
-}
-
 .strength-bar {
   background-color: red;
   width: 0;
   height: 100%;
+  transition: background-color 0.25s ease-out;
+}
+
+.strength-bar.p0 {
+  background-color: var(--red);
+}
+.strength-bar.p20 {
+  background-color: var(--red-orange);
+}
+.strength-bar.p40 {
+  background-color: var(--orange);
+}
+.strength-bar.p60 {
+  background-color: var(--yellow-green);
+}
+.strength-bar.p80 {
+  background-color: var(--green);
 }
 
 #test-password {

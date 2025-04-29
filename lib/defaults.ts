@@ -1,19 +1,17 @@
-export interface Options {
-  length?: number;
-  lowercase?: boolean | number;
-  uppercase?: boolean | number;
-  numbers?: boolean | number;
-  symbols?: boolean | number;
-  umlauts?: boolean | number;
-  excludeSimilar?: boolean;
-  normalDistribute?: boolean;
+import {
+  type Options,
+  type CharGroups,
+  type PasswordStrengthStatistic,
+} from './types';
 
-  lowercaseWeight?: number;
-  uppercaseWeight?: number;
-  numbersWeight?: number;
-  symbolsWeight?: number;
-  umlautsWeight?: number;
-}
+// all available charGroups
+export const charGroups: CharGroups = {
+  lowercase: 'abcdefghijklmnopqrstuvwxyz',
+  uppercase: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+  numbers: '0123456789',
+  symbols: `!"#$%&'()*+,-./:;<=>?@[]^_{|}~`,
+  umlauts: 'äöüÄÖÜ',
+};
 
 export const defaults: Options = {
   length: 10,
@@ -24,4 +22,12 @@ export const defaults: Options = {
   umlauts: false,
   excludeSimilar: false,
   normalDistribute: false,
+};
+
+export const defaultStatistic: PasswordStrengthStatistic = {
+  lowercase: 0,
+  uppercase: 0,
+  numbers: 0,
+  symbols: 0,
+  umlauts: 0,
 };

@@ -1,112 +1,34 @@
-import { defaults, type Options } from './defaults';
-
-const shuffleArray = <T>(array: T[]): T[] => {
-  const result = [...array];
-  for (let i = result.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [result[i], result[j]] = [result[j], result[i]];
-  }
-  return result;
-};
-
-const getNumber = (value: string | boolean | number | undefined): number =>
-  value === true ? 1 : Number(value);
-
-export interface Output {
-  password: string;
-  entropy: number;
-  length: number;
-  strength: number;
-  statistic: PasswordStrengthStatistic;
-}
-
-export interface CharGroups {
-  lowercase: string;
-  uppercase: string;
-  numbers: string;
-  symbols: string;
-  umlauts: string;
-}
-
-export interface PasswordStrengthStatistic {
-  lowercase: number;
-  uppercase: number;
-  numbers: number;
-  symbols: number;
-  umlauts: number;
-}
-
-export interface PasswordStrength {
-  entropy: number;
-  length: number;
-  statistic: PasswordStrengthStatistic;
-  strength: number;
-}
-
-// all available charGroups
-export const charGroups: CharGroups = {
-  lowercase: 'abcdefghijklmnopqrstuvwxyz',
-  uppercase: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
-  numbers: '0123456789',
-  symbols: `!"#$%&'()*+,-./:;<=>?@[]^_{|}~`,
-  umlauts: 'äöüÄÖÜ',
-};
+import {
+  type CharGroups,
+  type Options,
+  type Output,
+  type PasswordStrength,
+  type PasswordStrengthStatistic,
+} from './types';
+import { defaults, charGroups, defaultStatistic } from './defaults';
+import { shuffleArray, getNumber } from './util';
 
 const similarChars: string = 'lOI01|';
-
-const defaultStatistic: PasswordStrengthStatistic = {
-  lowercase: 0,
-  uppercase: 0,
-  numbers: 0,
-  symbols: 0,
-  umlauts: 0,
-};
 
 class PasswordClass {
   charGroups: CharGroups;
   settings!: Options;
   charsUpdated: boolean;
   charset!: string;
-  charGroupsExclude: CharGroups;
+  filteredCharGroups: CharGroups;
   lastExcludeSimilar: boolean = false;
 
   constructor() {
-    this.charGroups = { ...charGroups }; // clone
-    this.charGroupsExclude = { ...charGroups }; // clone
+    this.charGroups = { ...charGroups };
+    this.filteredCharGroups = { ...charGroups };
     this.charsUpdated = false;
-  }
-
-  // for default distribution
-  private generateRequiredChars(charGroups: CharGroups) {
-    let requiredChars: string[] = [];
-    const statistic = { ...defaultStatistic };
-    const groups: Partial<CharGroups> = {};
-
-    for (const [name, chars] of Object.entries(charGroups) as [
-      keyof CharGroups,
-      string
-    ][]) {
-      const val = this.settings[name as keyof Options];
-      if (!val || !chars) continue;
-
-      this.charset += chars;
-      groups[name] = charGroups[name];
-
-      const min = getNumber(val);
-      statistic[name] = min;
-      for (let i = 0; i < min; i++) {
-        requiredChars.push(chars[Math.floor(Math.random() * chars.length)]);
-      }
-    }
-
-    return { groups, requiredChars, statistic };
+    this.charset = '';
   }
 
   // returns the char groups to be used for password creation
   private getCharGroups(): CharGroups {
     const exclude = !!this.settings.excludeSimilar;
 
-    // Return original if excludeSimilar is false
     if (!exclude) {
       this.lastExcludeSimilar = false;
       return this.charGroups;
@@ -120,49 +42,83 @@ class PasswordClass {
         string
       ][]) {
         modified[group] = [...chars]
-          .filter((c) => !similarChars.includes(c))
+          .filter((_chars) => !similarChars.includes(_chars))
           .join('');
       }
-      this.charGroupsExclude = modified;
+      this.filteredCharGroups = modified;
       this.charsUpdated = false;
       this.lastExcludeSimilar = exclude;
     }
 
-    return this.charGroupsExclude;
+    return this.filteredCharGroups;
   }
 
-  private computeDistributedGroups(
-    charGroups: CharGroups
-  ): { name: string; chars: string; count: number }[] {
+  private computePasswordArray(
+    charGroups: CharGroups,
+    normalDistribute: boolean = false
+  ): {
+    statistic: PasswordStrengthStatistic;
+    password: string[];
+  } {
     const groups: {
       name: string;
       chars: string;
-      count: number;
       weight: number;
     }[] = [];
 
+    const statistic = { ...defaultStatistic };
     let totalMin = 0;
     let totalWeight = 0;
+    const password: string[] = [];
 
+    this.charset = '';
+
+    const addRandomChar = (group: { name: string; chars: string }) => {
+      const name = group.name as keyof PasswordStrengthStatistic;
+      const chars = group.chars;
+      password.push(chars[Math.floor(Math.random() * chars.length)]);
+      statistic[name]++;
+    };
+
+    // required
     for (const [name, chars] of Object.entries(charGroups) as [
       keyof CharGroups,
       string
     ][]) {
-      const enabled = this.settings[name];
-      if (!enabled || !chars) continue;
+      const val = this.settings[name];
+      if (!val || !chars) continue;
 
-      const min = getNumber(enabled);
-      const weight = getNumber(this.settings[`${name}Weight` as keyof Options]);
-      groups.push({ name, chars, count: min, weight });
+      const min = getNumber(val);
+      const weight =
+        getNumber(this.settings[`${name}Weight` as keyof Options]) || 0;
+
+      groups.push({ name, chars, weight });
+      statistic[name] = min;
+
+      for (let i = 0; i < min; i++) {
+        password.push(chars[Math.floor(Math.random() * chars.length)]);
+      }
+
+      this.charset += chars;
+
       totalMin += min;
       totalWeight += weight;
     }
 
-    if (!groups.length) return [];
-
-    this.charset = groups.map((g) => g.chars).join('');
     const targetLength = Math.max(this.settings.length ?? 0, totalMin);
     const remaining = targetLength - totalMin;
+
+    if (!normalDistribute) {
+      for (let i = 0; i < remaining; i++) {
+        const char =
+          this.charset[Math.floor(Math.random() * this.charset.length)];
+        password.push(char);
+        const group = this.getGroupFromChar(char);
+        if (group) statistic[group.name]++;
+      }
+
+      return { password, statistic };
+    }
 
     if (remaining > 0) {
       if (totalWeight > 0) {
@@ -170,35 +126,24 @@ class PasswordClass {
 
         for (const group of groups) {
           const share = Math.floor((group.weight / totalWeight) * remaining);
-          group.count += share;
+          if (0 === share) continue;
           distributed += share;
+          for (let i = 0; i < share; i++) addRandomChar(group);
         }
 
-        // Distribute leftover
+        // distribute leftovers
         for (let i = 0; distributed < remaining; i++, distributed++) {
-          groups[i % groups.length].count++;
+          addRandomChar(groups[i % groups.length]);
         }
       } else {
         // Even distribution fallback
         for (let i = 0; i < remaining; i++) {
-          groups[i % groups.length].count++;
+          addRandomChar(groups[i % groups.length]);
         }
       }
     }
 
-    return groups.map(({ name, chars, count }) => ({ name, chars, count }));
-  }
-
-  private selectCharacters(
-    groups: { name: string; chars: string; count: number }[]
-  ): string[] {
-    const chars: string[] = [];
-    for (const group of groups) {
-      for (let i = 0; i < group.count; i++) {
-        chars.push(group.chars[Math.floor(Math.random() * group.chars.length)]);
-      }
-    }
-    return chars;
+    return { password, statistic };
   }
 
   private generatePassword(
@@ -223,13 +168,39 @@ class PasswordClass {
     return { entropy, length, password, strength, statistic };
   }
 
+  private getGroupFromChar(
+    char: string
+  ): { name: keyof PasswordStrengthStatistic; chars: string } | undefined {
+    for (const [name, chars] of Object.entries(charGroups) as [
+      keyof PasswordStrengthStatistic,
+      string
+    ][]) {
+      if (chars.includes(char)) return { name, chars };
+    }
+    return undefined;
+  }
+
   updateChars(charGroup: CharGroups) {
     this.charGroups = { ...this.charGroups, ...charGroup };
-    this.charGroupsExclude = { ...this.charGroups };
+    this.filteredCharGroups = { ...this.charGroups };
 
     this.charsUpdated = true;
   }
 
+  /**
+   * Returns the current charset being used
+   *
+   * @returns Array
+   */
+  getCharset(): string {
+    return this.charset;
+  }
+
+  /**
+   * Test a given password
+   * @param password The password to test
+   * @returns Object
+   */
   test(password: string): PasswordStrength {
     const statistic = { ...defaultStatistic };
     if (!password) {
@@ -243,32 +214,31 @@ class PasswordClass {
     let charset = '';
 
     for (const char of password) {
-      for (const [group, chars] of Object.entries(charGroups)) {
-        if (chars.includes(char)) {
-          const charGroup = group as keyof PasswordStrengthStatistic;
-          if (statistic[charGroup] === 0) {
-            charset += chars;
-          }
-          statistic[charGroup] += 1;
-          break;
+      const group = this.getGroupFromChar(char);
+      if (group) {
+        const { name, chars } = group;
+        if (statistic[name] === 0) {
+          charset += chars;
         }
+        statistic[name]++;
       }
     }
 
     const length = password.length;
-    const entropy = password.length * Math.log2(charset.length);
+    const entropy = length * Math.log2(charset.length);
     const strength = Math.min(entropy / 100, 1);
 
-    return {
-      entropy,
-      length,
-      statistic,
-      strength,
-    };
+    return { entropy, length, statistic, strength };
   }
 
+  /**
+   * Generates a password based on the current settings.
+   *
+   * @param options Optional override settings.
+   * @returns Object
+   */
   create(options?: Options): Output {
-    this.settings = { ...defaults, ...(options ?? {}) };
+    this.settings = { ...defaults, ...options };
 
     if (!this.settings.length) {
       this.settings.length = defaults.length;
@@ -279,58 +249,19 @@ class PasswordClass {
     );
 
     if (!anyGroupSelected) {
-      console.error('At least one character group must be selected.');
+      // console.error('At least one character group must be selected.');
       return this.generatePassword();
     }
 
-    this.charset = '';
     const currentCharGroups = this.getCharGroups();
-
-    // normal distribute
-    if (this.settings.normalDistribute) {
-      let requiredChars: string[] = [];
-      const groups = this.computeDistributedGroups(currentCharGroups);
-      const statistic = groups.reduce((prev, next) => {
-        (prev as any)[next.name] = next.count;
-        return prev;
-      }, {} as PasswordStrengthStatistic) || { ...defaultStatistic };
-
-      if (!this.charset.length) return this.generatePassword();
-      requiredChars = this.selectCharacters(groups);
-      return this.generatePassword(requiredChars, statistic);
-    }
-
-    // fallback to default distribution
-    const { groups, requiredChars, statistic } =
-      this.generateRequiredChars(currentCharGroups);
-
-    if (!requiredChars.length) return this.generatePassword();
-
-    this.settings.length = Math.max(
-      this.settings.length ?? 0,
-      requiredChars.length
+    const { password: passwordArray, statistic } = this.computePasswordArray(
+      currentCharGroups,
+      this.settings.normalDistribute
     );
-
-    // const charSetSize = this.charset.length;
-    const passwordArray: string[] = [...requiredChars];
-    const currentCharGroupsObj = Object.entries(groups);
-    const currentCharGroupsLength = currentCharGroupsObj.length;
-
-    for (let i = requiredChars.length; i < this.settings.length; i++) {
-      const rand = Math.floor(Math.random() * currentCharGroupsLength);
-      const [name, chars] = currentCharGroupsObj[rand];
-      const char = chars[Math.floor(Math.random() * chars.length)];
-      // this.charset[
-      //   Math.floor(Math.random() * groups[name as keyof CharGroups].length)
-      // ];
-
-      statistic[name as keyof CharGroups]++;
-      passwordArray.push(char);
-      // passwordArray.push(this.charset[Math.floor(Math.random() * charSetSize)]);
-    }
-
     return this.generatePassword(passwordArray, statistic);
   }
 }
 
-export const password = () => new PasswordClass();
+const password = () => new PasswordClass();
+
+export { password, charGroups };
