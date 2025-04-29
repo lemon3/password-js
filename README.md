@@ -1,7 +1,7 @@
 # Random Password Generator
 Modern, customizable password generator with entropy analysis and flexible character group settings.
 
-[See a small demo, that uses this package](https://lemon3.github.io/pwkit/)
+[See a small demo, that uses this package!](https://lemon3.github.io/pwkit/)
 
 ## Import into your project
 ```bash

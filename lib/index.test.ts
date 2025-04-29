@@ -158,8 +158,12 @@ describe('PasswordClass.getCharset', () => {
     });
     const charset = pw.getCharset();
     expect(typeof charset).toBe('string');
+    expect(charset).toContain('a'); // lowercase
+    expect(charset).toContain('A'); // uppercase
+    expect(charset).toContain('0'); // numbers
+    expect(charset).toContain('!'); // symbols
+
     expect(charset.length).toBeGreaterThan(0);
-    expect(charset).toContain('a'); // assumes default lowercase chars
   });
 
   it('should return an empty string before create()', () => {

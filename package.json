@@ -23,6 +23,7 @@
   ],
   "author": "wolfgang jungmayer",
   "license": "MIT",
+  "types": "dist/types/index.d.ts",
   "browser": "dist/pwkit.umd.js",
   "type": "module",
   "main": "dist/pwkit.umd.js",
@@ -48,9 +49,10 @@
   },
   "homepage": "https://github.com/lemon3/pwkit",
   "devDependencies": {
-    "typescript": "~5.7.2",
-    "vite": "^6.3.1",
+    "typescript": "~5.8.3",
+    "vite": "^6.3.3",
     "vite-plugin-banner": "^0.8.1",
+    "vite-plugin-dts": "^4.5.3",
     "vitest": "^3.1.2"
   }
 }

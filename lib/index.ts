@@ -5,6 +5,7 @@ import {
   type PasswordStrength,
   type PasswordStrengthStatistic,
 } from './types';
+
 import { defaults, charGroups, defaultStatistic } from './defaults';
 import { shuffleArray, getNumber } from './util';
 

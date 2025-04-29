@@ -1,6 +1,7 @@
-/* global __dirname */
+/ * global __dirname */;
 import { resolve } from 'path';
 import { defineConfig } from 'vite';
+import dts from 'vite-plugin-dts';
 
 import banner from 'vite-plugin-banner';
 import pkg from './package.json';
@@ -41,5 +42,15 @@ export default defineConfig({
     ],
   },
 
-  plugins: [banner(bannerText)],
+  plugins: [
+    banner(bannerText),
+    dts({
+      insertTypesEntry: true,
+      outDir: 'dist/types',
+      staticImport: true,
+      tsconfigPath: './tsconfig.json',
+      include: ['./lib'],
+      exclude: [],
+    }),
+  ],
 });
