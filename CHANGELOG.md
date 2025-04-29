@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.0.4
+### updated
+- add type definitions to package json
+
 ## v0.0.3
 ### updated
 - performance optimization

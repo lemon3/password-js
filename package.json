@@ -1,7 +1,7 @@
 {
   "name": "pwkit",
   "private": false,
-  "version": "0.0.3",
+  "version": "0.0.4",
   "packageManager": "pnpm@9.11.0",
   "description": "Modern, customizable password generator with entropy analysis and flexible character group settings.",
   "keywords": [
