@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.0.6
+### added
+- code coverage added
+### updated
+- performance optimization
+- new preview
+
 ## v0.0.5
 ### updated
 - patch lib/index.ts and add export type (to access types easily)

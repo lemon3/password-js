@@ -1,41 +1,21 @@
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+/* select boxes */
+@import url(_root.css);
+@import url(_select.css);
+@import url(_range.css);
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-
-  /* --color-1: rgb(206, 50, 50);
-  --color-2: rgb(161, 79, 46);
-  --color-3: rgb(117, 108, 43);
-  --color-4: rgb(72, 137, 35);
-  --color-5: rgb(27, 165, 27); */
-
-  /* 1. Red */
-  --red: rgb(206, 50, 50);
-
-  /* 2. Reddish-Orange */
-  --red-orange: rgb(255, 85, 0);
-
-  /* 3. Orange */
-  --orange: rgb(236, 187, 10);
-
-  /* 4. Yellow-Green */
-  --yellow-green: rgb(161, 235, 15);
-
-  /* 5. Green */
-  --green: rgb(7, 210, 7);
+* {
+  -webkit-tap-highlight-color: transparent;
 }
 
 html {
   touch-action: manipulation;
+}
+
+/* Prevent horizontal scrolling */
+html,
+body {
+  /* overflow-x: hidden; */
+  touch-action: pan-y; /* Prevent side-scrolling on touch devices */
 }
 
 a {
@@ -49,15 +29,18 @@ a:hover {
 
 body {
   margin: 0;
-  display: flex;
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
 }
 
 h1 {
-  font-size: 3.2em;
+  font-size: 2.2em;
   line-height: 1.1;
+}
+
+h2 {
+  font-size: 1.3em;
 }
 
 #app {
@@ -65,12 +48,6 @@ h1 {
   margin: 0 auto;
   padding: 1em;
   text-align: center;
-}
-
-#result {
-  font-size: 36px;
-  font-family: monospace, sans-serif;
-  margin-bottom: 18px;
 }
 
 .usn,
@@ -104,6 +81,7 @@ button:focus-visible {
   display: flex;
   flex-direction: row;
   justify-content: center;
+  margin-top: 1em;
   margin-bottom: 2em;
 }
 
@@ -116,11 +94,12 @@ button:focus-visible {
   display: flex;
   margin: 0 auto;
   flex-direction: column;
-  max-width: 300px;
+  max-width: 360px;
 }
 
 #strength-result {
   min-height: 24px;
+  margin-bottom: 2em;
 }
 
 .strength-bar-wrapper {
@@ -152,21 +131,25 @@ button:focus-visible {
   background-color: var(--green);
 }
 
-#test-password {
-  font-size: 24px;
+#result {
+  font-size: 18px;
   padding: 0.5em;
+  font-family: monospace, sans-serif;
+  border-bottom: 1px solid var(--color1);
 }
 
 @media (prefers-color-scheme: light) {
   :root {
+    --color1: #213547;
+
     color: #213547;
-    background-color: #ffffff;
+    background-color: #f1f1f1;
   }
   a:hover {
     color: #747bff;
   }
   button {
-    background-color: #f9f9f9;
+    background-color: hsl(208, 37%, 80%);
   }
 }
 
@@ -175,4 +158,16 @@ canvas {
   height: auto;
   display: block;
   image-rendering: pixelated;
+}
+
+.error {
+  color: var(--error-color);
+}
+
+.small {
+  font-size: 14px;
+}
+
+.heading {
+  font-style: italic;
 }

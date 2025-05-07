@@ -1,0 +1,47 @@
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  --color1: rgba(255, 255, 255, 0.87);
+
+  --lowercase-color: #ba2974;
+  --uppercase-color: #bbab00;
+  --numbers-color: #00ca62;
+  --symbols-color: #0d80cc;
+  --umlauts-color: #9651c7;
+
+  --error-color: #bb0000;
+
+  --input-range-thumb-color: #007bff;
+
+  /* --color-1: rgb(206, 50, 50);
+  --color-2: rgb(161, 79, 46);
+  --color-3: rgb(117, 108, 43);
+  --color-4: rgb(72, 137, 35);
+  --color-5: rgb(27, 165, 27); */
+
+  /* 1. Red */
+  --red: rgb(206, 50, 50);
+
+  /* 2. Reddish-Orange */
+  --red-orange: rgb(255, 85, 0);
+
+  /* 3. Orange */
+  --orange: rgb(236, 187, 10);
+
+  /* 4. Yellow-Green */
+  --yellow-green: rgb(161, 235, 15);
+
+  /* 5. Green */
+  --green: rgb(7, 210, 7);
+}

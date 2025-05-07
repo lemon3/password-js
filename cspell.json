@@ -1,7 +1,18 @@
 {
   "$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json",
   "version": "0.2",
-  "words": ["Avenir", "pwgen", "pwkit"],
-  "dictionaries": ["lorem-ipsum"],
-  "ignorePaths": ["node_modules", ".gitignore", "pnpm-lock.yaml"]
+  "words": [
+    "Avenir",
+    "HIJKMLN",
+    "pwgen",
+    "pwkit"
+  ],
+  "dictionaries": [
+    "lorem-ipsum"
+  ],
+  "ignorePaths": [
+    "node_modules",
+    ".gitignore",
+    "pnpm-lock.yaml"
+  ]
 }

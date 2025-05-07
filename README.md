@@ -1,11 +1,19 @@
-# Random Password Generator
-Modern, customizable password generator with entropy analysis and flexible character group settings.
+# PWkit
+![PWkit](https://raw.githubusercontent.com/lemon3/pwkit/main/_assets/pwkit.gif)
+
+Modern, customizable password **generator** and **tester** with entropy analysis and flexible character group settings.
 
 [See a small demo, that uses this package!](https://lemon3.github.io/pwkit/)
 
 ## Import into your project
 ```bash
 pnpm add pwkit
+```
+```bash
+npm install pwkit
+```
+```bash
+yarn add pwkit
 ```
 
 ## Usage
@@ -25,16 +33,17 @@ more advanced usage
 ```js
 import { password } from "pwkit";
 
-const pwd = password();
 const options = {
   length: 12,
   lowercase: 4,
   symbols: 3,
 };
+const pwd = password(options);
+
 // generates a random password with a length of 12
 // and ensures that at least 4 lower-case letters and
 // at least 3 symbols are used for the generation.
-console.log(pwd.create(options));
+console.log(pwd.create());
 ```
 
 ### Test a password
@@ -50,9 +59,12 @@ console.log(result);
 
 ## Methods
 
-### create()
+### create(options?)
 ```js
-const pwd = password();
+const options = {
+  // see below
+};
+const pwd = password(options);
 const myPassword = pwd.create();
 
 console.log(myPassword);
@@ -93,6 +105,46 @@ console.log(tmp);
 //   strength: 0.6523561956057012,
 // }
 ```
+
+### setCharGroups()
+to override the character groups
+```js
+const pwd = password();
+const myNewGroups = {
+  lowercase: 'abcdefg',
+  uppercase: 'HIJKMLN',
+  numbers: '0123456',
+  symbols: '!"§$%&/',
+}
+pwd.setCharGroups(myNewGroups);
+```
+
+### resetCharGroups()
+reset all Groups to their default value
+```js
+const pwd = password();
+pwd.resetCharGroups();
+```
+
+### updateSettings()
+Useful to override the settings. The old settings will be overwritten!
+```js
+const pwd = password();
+const myNewSettings = {
+  length: 32,
+  // and others, see options
+};
+pwd.updateSettings(myNewSettings);
+```
+
+### getCharset()
+returns all characters (that are used for password generation) as a string.
+```js
+const pwd = password();
+const chars = pwd.getCharset();
+console.log(chars);
+```
+
 
 ## options
 ```js

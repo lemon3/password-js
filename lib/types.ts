@@ -1,9 +1,12 @@
-export interface Output {
-  password: string;
+export interface PasswordStrength {
   entropy: number;
   length: number;
-  strength: number;
   statistic: PasswordStrengthStatistic;
+  strength: number;
+}
+
+export interface Output extends PasswordStrength {
+  password: string;
 }
 
 export interface CharGroups {
@@ -20,13 +23,6 @@ export interface PasswordStrengthStatistic {
   numbers: number;
   symbols: number;
   umlauts: number;
-}
-
-export interface PasswordStrength {
-  entropy: number;
-  length: number;
-  statistic: PasswordStrengthStatistic;
-  strength: number;
 }
 
 export interface Options {
