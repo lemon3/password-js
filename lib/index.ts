@@ -9,7 +9,7 @@ import {
 import { defaults, charGroups, defaultStatistic } from './defaults';
 import { shuffleArray, getNumber } from './util';
 
-const similarChars: string = 'lOI01|';
+const similarChars: string = 'lI1|O0';
 
 class PasswordClass {
   charGroups: CharGroups;
