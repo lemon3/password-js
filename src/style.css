@@ -89,6 +89,31 @@ button:focus-visible {
   margin: 0 0.5em;
 }
 
+.tab-group {
+  margin-top: 2em;
+  margin-bottom: 2em;
+  border-bottom: 1px solid #ccc;
+}
+
+.tab-group button {
+  border-left: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+  border-top: 1px solid #ccc;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.tab-group button.active {
+  background-color: var(--active-tab-color);
+  transform: scale(1.2);
+  transform-origin: bottom;
+}
+
+.tab-group button:focus,
+.tab-group button:focus-visible {
+  outline: none;
+}
+
 .password-wrapper {
   position: relative;
   display: flex;
@@ -170,4 +195,9 @@ canvas {
 
 .heading {
   font-style: italic;
+}
+
+input {
+  font-size: 18px;
+  padding: 0.5em;
 }

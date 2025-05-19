@@ -127,7 +127,7 @@ pwd.resetCharGroups();
 ```
 
 ### updateSettings()
-Useful to override the settings. The old settings will be overwritten!
+Useful to override the settings. The old settings will be overwritten, and merged with the defaults.
 ```js
 const pwd = password();
 const myNewSettings = {

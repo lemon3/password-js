@@ -7,71 +7,82 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   <div>
     <h1 class="heading">PWkit</h1>
     <p>a tool for creating and testing passwords!</p>
-    <div class="password-wrapper">
-      <div id="result"></div>
-      <div class="strength-bar-wrapper">
-        <div class="strength-bar" id="strength-bar"></div>
+    <div>
+      <div class="tab-group">
+        <button data-content="gen" class="usn tab active" id="gen" type="button">create</button>
+        <button data-content="test" class="usn tab" id="test" type="button">test</button>
       </div>
-    </div>
-    <div id="strength-result"></div>
-    <h2>Password length</h2>
-    <div class="range-element">
-      <input
-        type="range"
-        id="password-length-slider"
-        min="1"
-        max="20"
-        value=""
-        step="1"
-      />
-      <div class="range-label min-range" id="min-range">1</div>
-      <div class="range-label max-range" id="max-range">20</div>
-    </div>
-    <div id="length-value"></div>
-    <div class="button-group">
-      <button class="usn" id="copy" type="button">copy</button>
-      <button class="usn" id="generate" type="button">generate</button>
-    </div>
+      <div id="content-gen" style="display:none">
+        <div class="password-wrapper">
+          <div id="result"></div>
+          <div class="strength-bar-wrapper">
+            <div class="strength-bar" id="strength-bar"></div>
+          </div>
+        </div>
+        <div id="strength-result"></div>
+        <h2>Password length</h2>
+        <div class="range-element">
+          <input
+            type="range"
+            id="password-length-slider"
+            min="1"
+            max="20"
+            value=""
+            step="1"
+          />
+          <div class="range-label min-range" id="min-range">1</div>
+          <div class="range-label max-range" id="max-range">20</div>
+        </div>
+        <div id="length-value"></div>
+        <div class="button-group">
+          <button class="usn" id="copy" type="button">copy</button>
+          <button class="usn" id="generate" type="button">generate</button>
+        </div>
 
-
-    <h2>Character groups</h2>
-    <p>Select the character groups to be used when creating the password!</p>
-    <div class="checkboxes">
-      <label class="checkbox">
-        <input type="checkbox" name="lowercase" class="setter" />
-        <span class="toggle-label lowercase"></span>
-        <span class="checkbox-label lowercase user-select-none"
-          >Lowercase [a-z]</span
-        >
-      </label>
-      <label class="checkbox">
-        <input type="checkbox" name="uppercase" class="setter" />
-        <span class="toggle-label uppercase"></span>
-        <span class="checkbox-label uppercase user-select-none"
-          >Uppercase [A-Z]</span
-        >
-      </label>
-      <label class="checkbox">
-        <input type="checkbox" name="numbers" class="setter" />
-        <span class="toggle-label numbers"></span>
-        <span class="checkbox-label numbers user-select-none"
-          >Numbers [0-9]</span
-        >
-      </label>
-      <label class="checkbox">
-        <input type="checkbox" name="symbols" class="setter" />
-        <span class="toggle-label symbols"></span>
-        <span class="checkbox-label symbols user-select-none"
-          >Symbols</span
-        >
-      </label>
-      <label class="checkbox">
-        <input type="checkbox" name="umlauts" class="setter" />
-        <span class="toggle-label umlauts"></span>
-        <span class="checkbox-label umlauts user-select-none"
-          >Umlauts</span
-        >
-      </label>
+        <h2>Character groups</h2>
+        <p>Select the character groups to be used when creating the password!</p>
+        <div class="checkboxes">
+          <label class="checkbox">
+            <input type="checkbox" name="lowercase" class="setter" />
+            <span class="toggle-label lowercase"></span>
+            <span class="checkbox-label lowercase user-select-none"
+              >Lowercase [a-z]</span
+            >
+          </label>
+          <label class="checkbox">
+            <input type="checkbox" name="uppercase" class="setter" />
+            <span class="toggle-label uppercase"></span>
+            <span class="checkbox-label uppercase user-select-none"
+              >Uppercase [A-Z]</span
+            >
+          </label>
+          <label class="checkbox">
+            <input type="checkbox" name="numbers" class="setter" />
+            <span class="toggle-label numbers"></span>
+            <span class="checkbox-label numbers user-select-none"
+              >Numbers [0-9]</span
+            >
+          </label>
+          <label class="checkbox">
+            <input type="checkbox" name="symbols" class="setter" />
+            <span class="toggle-label symbols"></span>
+            <span class="checkbox-label symbols user-select-none"
+              >Symbols</span
+            >
+          </label>
+          <label class="checkbox">
+            <input type="checkbox" name="umlauts" class="setter" />
+            <span class="toggle-label umlauts"></span>
+            <span class="checkbox-label umlauts user-select-none"
+              >Umlauts</span
+            >
+          </label>
+        </div>
+      </div>
+      <div id="content-test" style="display:none">
+        <input type="text" id="test-pw" placeholder="test password ...">
+        <div id="test-pw-result"></div>
+      </div>
     </div>
   </div>
 `;
@@ -104,10 +115,31 @@ const init = () => {
   ) as NodeListOf<HTMLInputElement>;
   const lengthValueEL = document.querySelector('#length-value') as HTMLElement;
   const minRange = document.querySelector('#min-range') as HTMLDivElement;
+  const tabs = document.querySelectorAll('.tab') as NodeList;
+  const testPw = document.querySelector('#test-pw') as HTMLInputElement;
+  const testPwResult = document.querySelector(
+    '#test-pw-result'
+  ) as HTMLDivElement;
 
   const pwd = password(options);
   let minPasswordLength = 0;
   let prevColorClass: string;
+
+  const test = (evt: Event) => {
+    const target = evt.currentTarget as HTMLInputElement;
+    const value = target.value;
+    if (!value && testPwResult) {
+      testPwResult.innerHTML = '';
+      return;
+    }
+
+    const result = pwd.test(value);
+    if (testPwResult) {
+      testPwResult.innerHTML = `length: ${
+        result.length
+      } | entropy: ${result.entropy.toFixed(2)}`;
+    }
+  };
 
   const generatePasswordHTML = (password: string) => {
     // Generate HTML output with span wrappers
@@ -125,7 +157,6 @@ const init = () => {
       }
       html += `<span class="${groupClass}">${char}</span>`;
     }
-    // console.log(groupStatistic);
     return html;
   };
 
@@ -155,7 +186,8 @@ const init = () => {
     if (strengthResult) {
       const percent = 100 * pw.strength;
       const fixedP = +percent.toFixed(0);
-      strengthResult.textContent = 0 === pw.entropy ? '' : `${fixedP}%`;
+      const text = `entropy: ${pw.entropy.toFixed(2)}`;
+      strengthResult.textContent = 0 === pw.entropy ? '' : text;
       strengthBar.style.width = '' + percent + '%';
 
       let colorClass: string = 'p0';
@@ -233,6 +265,51 @@ const init = () => {
   const getNumber = (value: string | boolean | number): number =>
     value === true ? 1 : Number(value);
 
+  let activeTab: HTMLDivElement = Object.values(tabs).filter(
+    (tab) => true === (tab as HTMLDivElement).classList.contains('active')
+  )[0] as HTMLDivElement;
+  let activeContentId = `content-${activeTab.dataset.content}`;
+  let activeContent = document.querySelector(
+    '#' + activeContentId
+  ) as HTMLDivElement;
+
+  const switchTabContent = (oldContent: null | HTMLDivElement, newContent) => {
+    if (oldContent) {
+      oldContent.style.display = 'none';
+    }
+    if (newContent) {
+      newContent.style.display = 'block';
+    }
+  };
+
+  switchTabContent(null, activeContent);
+
+  const tabClicked = (evt: Event) => {
+    const target = evt.currentTarget as HTMLDivElement;
+    const isActive = target.classList.contains('active');
+    if (isActive) return;
+
+    activeTab?.classList.remove('active');
+    target.classList.add('active');
+
+    activeContent.style.display = 'none';
+    const newContentId = `content-${target.dataset.content}`;
+    let newContent = document.querySelector(
+      '#' + newContentId
+    ) as HTMLDivElement;
+
+    switchTabContent(activeContent, newContent);
+
+    // find input and focus on it
+    if ('test' === target.dataset.content) {
+      const input = newContent.querySelector('input') as HTMLInputElement;
+      input.focus();
+    }
+
+    activeContent = newContent;
+    activeTab = target;
+  };
+
   setter.forEach((el) => {
     const name = el.name;
     const startValue = getNumber((options as any)[name]);
@@ -259,11 +336,24 @@ const init = () => {
     minRange.innerHTML = minPasswordLength.toString();
   }
 
-  if (generateBtn && copyBtn && result && passwordLengthSlider) {
+  if (
+    generateBtn &&
+    copyBtn &&
+    result &&
+    passwordLengthSlider &&
+    tabs &&
+    testPw
+  ) {
     copyBtn.addEventListener('click', copyPassword);
     generateBtn.addEventListener('click', createNew);
     result.addEventListener('click', copyPassword);
     passwordLengthSlider.addEventListener('input', sliderUpdate);
+
+    tabs.forEach((t) => {
+      t.addEventListener('click', tabClicked);
+    });
+
+    testPw.addEventListener('input', test);
   }
 
   createNew();
